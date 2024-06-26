@@ -1,0 +1,24 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - "main"
+jobs:
+  deploy:
+    name: web
+    runs-on: ubuntu-latest
+    steps:
+      - name: deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          script: |
+            cd /var/www/html/web
+            git fetch origin main
+            git reset --hard  origin/main
+            docker pull -q registry.digitalocean.com/redistribute-community/nextjs
+            docker compose -f production.yml up --no-deps -d --pull="always" --force-recreate app
