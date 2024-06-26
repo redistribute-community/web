@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gradient-to-r from-purple-500 to-pink-500;
+  @apply text-purple-700;
+  height: 100vh;
+}
+
+a {
+  font-size: 1.25rem;
+  @apply text-orange-600;
+}
+
+hr {
+  @apply border-gray-700;
+}
+
+blockquote {
+  font-size: 0.75rem;
+  font-style: italic;
+  line-height: normal;
+  display: inline-flex;
+}
+
+.md {
+  p {
+    margin: 0.625rem 0;
+    line-height: 1.25rem;
+  }
+}
