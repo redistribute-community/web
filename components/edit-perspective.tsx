@@ -173,7 +173,7 @@ export function EditPerspective({ perspective }) {
               data-testid="perspective"
               id="perspective"
               placeholder="a/ /w .md(optional)"
-              className="text-black rounded border border-gray-700 dark:bg-slate-800 focus:ring-purple-700 text-xs w-full"
+              className="text-black rounded border border-gray-700 dark:bg-slate-800/20 focus:ring-purple-700 text-xs w-full"
               name="perspective"
               value={editTextPerspective || ""}
               onChange={(e) => changePerspectiveHandler(e)}
