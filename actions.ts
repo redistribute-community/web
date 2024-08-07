@@ -75,7 +75,7 @@ export async function editPerspective(
   topicId: string,
   id: string,
   objective_key: string,
-  formData: FormData,
+  formData: FormData
 ) {
   try {
     const schema = z.object({
@@ -178,7 +178,7 @@ export async function createToken(
   topicId: string,
   token: string,
   tokenKey: string,
-  lock: boolean,
+  lock: boolean
 ) {
   try {
     const tokenKeys = [
