@@ -13,7 +13,7 @@ export function EditPerspective({ perspective }) {
       perspective.topic_id,
       perspective.id,
       perspective.objective_key,
-      formData,
+      formData
     );
   }
 
@@ -21,10 +21,10 @@ export function EditPerspective({ perspective }) {
   const [fileDataURL, setFileDataURL] = useState(null);
   const [editColor, setEditColor] = useState(perspective.color);
   const [editDescription, setEditDescription] = useState(
-    perspective.description,
+    perspective.description
   );
   const [editTextPerspective, setEditTextPerspective] = useState(
-    perspective.perspective,
+    perspective.perspective
   );
 
   const changeFileHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +36,7 @@ export function EditPerspective({ perspective }) {
   };
 
   const changePerspectiveHandler = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     setEditTextPerspective(e.target.value);
   };

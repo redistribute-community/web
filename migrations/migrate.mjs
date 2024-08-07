@@ -1,7 +1,7 @@
 import postgres from "postgres";
 
 const sql = postgres(
-  `postgres://${process.env.POSTGRES_USERNAME}:${process.env.POSTGRES_PASSWORD}@postgres:5432/${process.env.POSTGRES_DATABASE}`,
+  `postgres://${process.env.POSTGRES_USERNAME}:${process.env.POSTGRES_PASSWORD}@postgres:5432/${process.env.POSTGRES_DATABASE}`
 );
 try {
   await sql`CREATE EXTENSION IF NOT EXISTS pgcrypto;`;

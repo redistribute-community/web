@@ -1,13 +1,28 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
+import { useRef, useEffect } from "react";
 import Link from "next/link";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 export function Perspectives({ perspectives, mode = undefined }) {
+  const perspectivesEndRef = useRef(null);
+
+  const scrollPerspectivesIntoView = () => {
+    perspectivesEndRef.current.scrollIntoView({
+      block: "end",
+      inline: "nearest",
+    });
+  };
+
+  useEffect(() => {
+    scrollPerspectivesIntoView();
+  }, [perspectives]);
+
   return (
     <div className={"flex-1 w-full" + (mode !== "r" ? "" : " overflow-y-auto")}>
       <ul
+        ref={perspectivesEndRef}
         className={"flex flex-col" + (mode !== "r" ? "" : " overflow-y-auto")}
       >
         {perspectives.map(
@@ -51,7 +66,7 @@ export function Perspectives({ perspectives, mode = undefined }) {
                 ""
               )}
             </li>
-          ),
+          )
         )}
       </ul>
     </div>

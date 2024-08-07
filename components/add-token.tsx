@@ -10,7 +10,7 @@ export function AddToken({ topicId }) {
       topicId,
       formData.get("token") as string,
       formData.get("tokenKey") as string,
-      lock,
+      lock
     );
   }
 
