@@ -16,8 +16,10 @@ export function Perspectives({ perspectives, mode = undefined }) {
   };
 
   useEffect(() => {
-    scrollPerspectivesIntoView();
-  }, [perspectives]);
+    if (mode === "e") {
+      scrollPerspectivesIntoView();
+    }
+  }, [perspectives, mode]);
 
   return (
     <div className={"flex-1 w-full" + (mode !== "r" ? "" : " overflow-y-auto")}>
