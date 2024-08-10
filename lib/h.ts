@@ -16,11 +16,6 @@ export const h = [
       "uploaded image's description which is placed into the images alt tag (optional)",
   },
   {
-    key: "edit",
-    name: "✏️",
-    description: "edit perspective",
-  },
-  {
     key: "color",
     name: "🎨",
     description: "color",

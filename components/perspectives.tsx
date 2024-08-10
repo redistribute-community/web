@@ -51,21 +51,22 @@ export function Perspectives({ perspectives, mode = undefined }) {
               ) : (
                 ""
               )}
-              <Markdown
-                remarkPlugins={[remarkGfm]}
-                className="whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2"
-              >
-                {perspective.perspective}
-              </Markdown>
               {mode === "e" ? (
-                <Link
-                  href={`/p/${perspective.id}/e`}
-                  className="text-[8px] text-green-500"
-                >
-                  ✏️ ⇛
+                <Link href={`/p/${perspective.id}/e`} className="text-inherit">
+                  <Markdown
+                    remarkPlugins={[remarkGfm]}
+                    className="whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2"
+                  >
+                    {perspective.perspective}
+                  </Markdown>
                 </Link>
               ) : (
-                ""
+                <Markdown
+                  remarkPlugins={[remarkGfm]}
+                  className="whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2"
+                >
+                  {perspective.perspective}
+                </Markdown>
               )}
             </li>
           )
