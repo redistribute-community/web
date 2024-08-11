@@ -52,7 +52,7 @@ export function Perspectives({ perspectives, mode = undefined }) {
                 ""
               )}
               {mode === "e" ? (
-                <Link href={`/p/${perspective.id}/e`} className="text-inherit">
+                <Link href={`/p/${perspective.id}/e`} className="text-inherit text-sm">
                   <Markdown
                     remarkPlugins={[remarkGfm]}
                     className="whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2"
