@@ -9,7 +9,3 @@ I want to be transparent as I write this love letter to our kind. In love, I aim
 An idea is to rely on community for sustenance. A plea to invest in me; as I would like to invest in you. Us invested.
 
 I don't know which way to go, but I trust you know.
-
-Direction may be found here `@`
-
-[https://redistribute.community/t/i](https://redistribute.community/t/i)
