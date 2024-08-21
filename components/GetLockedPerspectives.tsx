@@ -1,5 +1,5 @@
 import { getLockedPerspectives } from "@/actions";
-import { Perspectives } from "@/components/perspectives";
+import { Perspectives } from "@/components/Perspectives";
 
 export async function GetLockedPerspectives({ topicId, token }) {
   const perspectives = (await getLockedPerspectives(topicId, token)) || [];

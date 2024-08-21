@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AddToken } from "@/components/add-token";
+import { WriteToken } from "@/components/WriteToken";
 
 export default function Page({ params }) {
   const { slug } = params;
@@ -12,7 +12,7 @@ export default function Page({ params }) {
             href={process.env.NEXT_PUBLIC_FUNDING_URL}
             className="text-xs font-mono font-semibold"
           ></Link>
-          <AddToken topicId={slug} />
+          <WriteToken topicId={slug} />
         </div>
         <Link className="text-lg" href={`/t/${slug}/w`}>
           ⇚

@@ -3,7 +3,7 @@ RUN apk add --no-cache libc6-compat
 
 FROM base AS deps
 WORKDIR /app
-ENV NODE_ENV production
+ENV NODE_ENV=production
 COPY package.json package-lock.json ./
 COPY next.config.mjs .
 COPY tsconfig.json .
@@ -11,7 +11,7 @@ RUN npm i --production=false
 
 FROM base AS builder
 WORKDIR /app
-ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED=1
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 

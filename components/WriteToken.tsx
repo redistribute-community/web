@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { createToken } from "@/actions";
-import { Submit } from "@/components/submit";
+import { Submit } from "@/components/Submit";
 
-export function AddToken({ topicId }) {
+export function WriteToken({ topicId }) {
   async function formAction(formData: FormData) {
     await createToken(
       topicId,

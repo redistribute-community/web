@@ -6,6 +6,7 @@
 
 ```sh
 brew install --cask docker
+open -a Docker
 docker compose build --no-cache app
 ```
 
