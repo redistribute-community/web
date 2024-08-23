@@ -63,7 +63,7 @@ export async function addPerspective(topicId: string, formData: FormData) {
       }
     }
 
-    revalidatePath("/", "layout");
+    revalidatePath(`/t/${data.topicId}`, "page");
     return { result };
   } catch (e) {
     console.log(e);
@@ -137,7 +137,7 @@ export async function editPerspective(
       console.log("ENTER CORRECT TOKEN");
     }
 
-    revalidatePath("/", "layout");
+    revalidatePath(`/t/${data.topicId}`, "page");
     return { result };
   } catch (e) {
     console.log(e);
@@ -145,28 +145,46 @@ export async function editPerspective(
   }
 }
 
-export async function setCookie(token: string, topicId: string) {
+export async function setCookie(
+  token: string,
+  topicId: string,
+  perspectiveId?: string
+) {
   try {
     const schema = z.object({
-      topicId: z.string().min(1),
       token: z.string().min(1),
+      topicId: z.string().min(1),
+      perspectiveId: z.string().min(1).optional(),
     });
     const data = schema.parse({
-      topicId,
       token,
+      topicId,
+      perspectiveId,
     });
+    console.log(data);
     const isValid = await sql`
       SELECT token = crypt(${data.token}, token) FROM topics WHERE topic_id = ${data.topicId};
     `;
     if (isValid.length !== 0) {
-      cookies().set({
-        name: "t",
-        value: `${data.token}`,
-        httpOnly: true,
-        path: `/t/${data.topicId}/w`,
-        secure: true,
-        sameSite: true,
-      });
+      if (perspectiveId) {
+        cookies().set({
+          name: "t",
+          value: `${data.token}`,
+          httpOnly: true,
+          path: `/p/${data.perspectiveId}/e`,
+          secure: true,
+          sameSite: true,
+        });
+      } else {
+        cookies().set({
+          name: "t",
+          value: `${data.token}`,
+          httpOnly: true,
+          path: `/t/${data.topicId}/w`,
+          secure: true,
+          sameSite: true,
+        });
+      }
     }
   } catch (e) {
     console.log(e);

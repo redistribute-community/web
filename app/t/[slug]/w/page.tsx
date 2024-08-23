@@ -1,27 +1,30 @@
 import { cookies } from "next/headers";
-import { AddPerspective } from "@/components/add-perspective";
-import { GetPerspectives } from "@/components/get-perspectives";
-import { GetLockedPerspectives } from "@/components/get-locked-perspectives";
-import { isLocked } from "@/actions";
+import { getPerspectives, isLocked } from "@/actions";
+import { WritePerspective } from "@/components/WritePerspective";
+import { Token } from "@/components/Token";
 
 export default async function Page({ params }) {
   const { slug } = params;
-  const locked = await isLocked(slug);
   const cookieStore = cookies();
   const token = cookieStore.get("t");
+  const locked = await isLocked(slug);
+  const perspectives = (await getPerspectives(slug)) || [];
+
   return (
     <main className="relative flex flex-col items-center justify-between h-dvh overflow-y-hidden">
       <div className="flex flex-col items-center w-4/5 h-dvh">
-        <div className="flex-1 w-full overflow-y-auto">
-          {!locked ? (
-            <GetPerspectives topicId={slug} mode={"e"} />
-          ) : (
-            <GetLockedPerspectives topicId={slug} token={token?.value} />
-          )}
-        </div>
-        <div className="flex flex-col items-center w-4/5">
-          <AddPerspective topicId={slug} locked={locked} token={token?.value} />
-        </div>
+        {!token ? (
+          <div className="flex grow-0">
+            <Token topicId={slug} perspectiveId={null} />
+          </div>
+        ) : (
+          <WritePerspective
+            topicId={slug}
+            perspectives={perspectives}
+            locked={locked}
+            token={token?.value}
+          />
+        )}
       </div>
     </main>
   );

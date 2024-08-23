@@ -1,6 +1,6 @@
 import { getPerspectives } from "@/actions";
-import { Perspectives } from "@/components/perspectives";
-import { EmptyState } from "@/components/empty-state";
+import { Perspectives } from "@/components/Perspectives";
+import { EmptyState } from "@/components/EmptyState";
 
 export async function GetPerspectives({ topicId, mode = undefined }) {
   const perspectives = (await getPerspectives(topicId)) || [];

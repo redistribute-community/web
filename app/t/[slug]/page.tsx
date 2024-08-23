@@ -1,4 +1,4 @@
-import { GetPerspectives } from "@/components/get-perspectives";
+import { GetPerspectives } from "@/components/GetPerspectives";
 import { isLocked } from "@/actions";
 
 export default async function Page({ params }) {
