@@ -154,7 +154,7 @@ export async function setCookie(
     const schema = z.object({
       token: z.string().min(1),
       topicId: z.string().min(1),
-      perspectiveId: z.string().min(1).optional(),
+      perspectiveId: z.string().nullish(),
     });
     const data = schema.parse({
       token,
