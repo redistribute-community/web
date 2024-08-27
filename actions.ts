@@ -97,6 +97,10 @@ export async function editPerspective(
       description: formData.get("description"),
     });
     let result = [];
+    const isLock = await isLocked(data.topicId);
+    if (isLock) {
+      data.perspective = encrypt(data.perspective, data.token);
+    }
     const isValid = await sql`
       SELECT token = crypt(${data.token}, token) FROM topics WHERE topic_id = ${data.topicId};
     `;
@@ -188,7 +192,7 @@ export async function setCookie(
     }
   } catch (e) {
     console.log(e);
-    return { message: "Failed to create token" };
+    return { message: "Failed to set cookie" };
   }
 }
 
@@ -270,31 +274,24 @@ export async function isLocked(topicId: string) {
   }
 }
 
-export async function getPerspectives(topicId: string) {
+export async function getPerspectives(
+  topicId: string,
+  isLocked?: boolean,
+  token?: string
+) {
   try {
     const schema = z.object({
       topic_id: z.string().min(1),
+      is_locked: z.boolean(),
+      token: z.string().min(1),
     });
     const data = schema.parse({
       topic_id: topicId,
-    });
-    return await sql`SELECT p.id, perspective, p.topic_id, color, p.objective_key, o.description, width, height FROM perspectives as p LEFT JOIN objectives as o ON p.objective_key = o.objective_key WHERE p.topic_id=${data.topic_id} ORDER BY p.created_at;`;
-  } catch (e) {
-    console.log(e, { message: "Failed to get perspectives" });
-  }
-}
-
-export async function getLockedPerspectives(topicId: string, token?: string) {
-  try {
-    const schema = z.object({
-      topic_id: z.string().min(1),
-      token: z.string().min(1).optional(),
-    });
-    const data = schema.parse({
-      topic_id: topicId,
+      is_locked: isLocked,
       token: token,
     });
-    if (token) {
+
+    if (data.is_locked && data.token) {
       const isValid = await sql`
       SELECT token = crypt(${data.token}, token) FROM topics WHERE topic_id = ${data.topic_id};
     `;
@@ -305,15 +302,18 @@ export async function getLockedPerspectives(topicId: string, token?: string) {
         return perspectives.map((perspective) => {
           return {
             id: perspective[0],
-            perspective: decrypt(perspective[1], data.token),
+            perspective: decrypt(perspective[1], token),
             color: perspective[3],
             objective_key: perspective[4],
             description: perspective[5],
           };
         });
       }
+
+      return;
     }
-    return [];
+
+    return await sql`SELECT p.id, perspective, p.topic_id, color, p.objective_key, o.description, width, height FROM perspectives as p LEFT JOIN objectives as o ON p.objective_key = o.objective_key WHERE p.topic_id=${data.topic_id} ORDER BY p.created_at;`;
   } catch (e) {
     console.log(e, { message: "Failed to get perspectives" });
   }
