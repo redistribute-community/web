@@ -165,7 +165,6 @@ export async function setCookie(
       topicId,
       perspectiveId,
     });
-    console.log(data);
     const isValid = await sql`
       SELECT token = crypt(${data.token}, token) FROM topics WHERE topic_id = ${data.topicId};
     `;
@@ -282,15 +281,14 @@ export async function getPerspectives(
   try {
     const schema = z.object({
       topic_id: z.string().min(1),
-      is_locked: z.boolean(),
-      token: z.string().min(1),
+      is_locked: z.boolean().nullish(),
+      token: z.string().min(1).nullish(),
     });
     const data = schema.parse({
       topic_id: topicId,
       is_locked: isLocked,
       token: token,
     });
-
     if (data.is_locked && data.token) {
       const isValid = await sql`
       SELECT token = crypt(${data.token}, token) FROM topics WHERE topic_id = ${data.topic_id};
