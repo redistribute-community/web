@@ -337,6 +337,6 @@ export async function deleteTopic(topicId: string, tokenKey: string) {
       cookies().delete(`t_${data.topic_id}`);
     }
   } catch (e) {
-    console.log(e, { message: "Failed to get perspectives" });
+    console.log(e, { message: "Failed to delete topic" });
   }
 }
