@@ -18,7 +18,7 @@ export function Token({ topicId, perspectiveId }) {
               setInputToken(e.target.value);
             }}
             data-testid="token"
-            className="rounded border border-gray-700 dark:bg-slate-800/20 focus:ring-purple-700 text-xs w-full mb-1"
+            className="rounded border border-gray-700 dark:bg-slate-800/20 focus:ring-purple-700 text-xs w-full"
             type="text"
             id="token"
             name="token"
