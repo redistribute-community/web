@@ -6,7 +6,7 @@ import { Token } from "@/components/Token";
 export default async function Page({ params }) {
   const { slug } = params;
   const cookieStore = cookies();
-  const token = cookieStore.get("t");
+  const token = cookieStore.get(`t_${slug}`);
   const locked = await isLocked(slug);
   const perspectives = (await getPerspectives(slug, locked, token?.value)) || [];
 

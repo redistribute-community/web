@@ -171,24 +171,25 @@ export async function setCookie(
     if (isValid.length !== 0) {
       if (perspectiveId) {
         cookies().set({
-          name: "t",
+          name: `t_${data.topicId}`,
           value: `${data.token}`,
           httpOnly: true,
           path: `/p/${data.perspectiveId}/e`,
           secure: true,
-          sameSite: true,
+          sameSite: "strict",
         });
       } else {
         cookies().set({
-          name: "t",
+          name: `t_${data.topicId}`,
           value: `${data.token}`,
           httpOnly: true,
           path: `/t/${data.topicId}/w`,
           secure: true,
-          sameSite: true,
+          sameSite: "strict",
         });
       }
     }
+    return { message: "Incorrect token" };
   } catch (e) {
     console.log(e);
     return { message: "Failed to set cookie" };
@@ -300,7 +301,7 @@ export async function getPerspectives(
         return perspectives.map((perspective) => {
           return {
             id: perspective[0],
-            perspective: decrypt(perspective[1], token),
+            perspective: decrypt(perspective[1], data.token),
             color: perspective[3],
             objective_key: perspective[4],
             description: perspective[5],
