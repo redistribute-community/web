@@ -168,8 +168,7 @@ export async function setCookie(
     const isValid = await sql`
       SELECT token = crypt(${data.token}, token) FROM topics WHERE topic_id = ${data.topicId};
     `;
-    console.log(isValid);
-    if (isValid.length !== 0) {
+    if (isValid.length > 0 && isValid[0]["?column?"] === true) {
       if (perspectiveId) {
         cookies().set({
           name: `t_${data.topicId}`,
