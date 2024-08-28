@@ -11,7 +11,7 @@ export default async function Page({ params }) {
         {!locked ? (
           <GetPerspectives topicId={slug} />
         ) : (
-          <div className="text-center text-2xl">🔒 </div>
+          <div className="text-center text-2xl">🔒</div>
         )}
       </div>
     </main>

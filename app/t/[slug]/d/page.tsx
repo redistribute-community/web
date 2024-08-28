@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { WriteToken } from "@/components/WriteToken";
+import { DeleteTopic } from "@/components/DeleteTopic";
 
 export default function Page({ params }) {
   const { slug } = params;
@@ -8,11 +7,8 @@ export default function Page({ params }) {
     <main className="relative flex flex-col items-center h-full justify-center">
       <div className="flex flex-col items-center md:w-3/4">
         <div className="flex flex-col items-center w-4/5">
-          <WriteToken topicId={slug} />
+          <DeleteTopic topicId={slug} />
         </div>
-        <Link className="text-lg" href={`/t/${slug}/w`}>
-          ⇚
-        </Link>
       </div>
     </main>
   );

@@ -210,24 +210,24 @@ export async function createToken(
       process.env.KL_KEY,
     ];
     const schema = z.object({
-      topicId: z.string().min(1),
+      topic_id: z.string().min(1),
       token: z.string().min(1),
-      tokenKey: z.string().min(1),
+      token_key: z.string().min(1),
       lock: z.boolean(),
     });
     const data = schema.parse({
-      topicId,
+      topic_id: topicId,
       token,
-      tokenKey,
+      token_key: tokenKey,
       lock,
     });
     const isValid = await sql`
-      SELECT token = crypt(${data.token}, token) FROM topics WHERE topic_id = ${data.topicId};
+      SELECT token = crypt(${data.token}, token) FROM topics WHERE topic_id = ${data.topic_id};
     `;
-    if (isValid.length === 0 && tokenKeys.includes(data.tokenKey)) {
+    if (isValid.length === 0 && tokenKeys.includes(data.token_key)) {
       await sql`
       INSERT INTO topics (topic_id, token, lock)
-      VALUES (${data.topicId}, crypt(${data.token}, gen_salt('bf')), ${lock});`;
+      VALUES (${data.topic_id}, crypt(${data.token}, gen_salt('bf')), ${lock});`;
 
       return { message: "TOKEN CREATED" };
     }
@@ -313,6 +313,29 @@ export async function getPerspectives(
     }
 
     return await sql`SELECT p.id, perspective, p.topic_id, color, p.objective_key, o.description, width, height FROM perspectives as p LEFT JOIN objectives as o ON p.objective_key = o.objective_key WHERE p.topic_id=${data.topic_id} ORDER BY p.created_at;`;
+  } catch (e) {
+    console.log(e, { message: "Failed to get perspectives" });
+  }
+}
+
+export async function deleteTopic(topicId: string, tokenKey: string) {
+  const tokenKeys = [process.env.TS_KEY, process.env.EL_KEY];
+  try {
+    const schema = z.object({
+      topic_id: z.string().min(1),
+      token_key: z.string().min(1),
+    });
+    const data = schema.parse({
+      topic_id: topicId,
+      token_key: tokenKey,
+    });
+    if (tokenKeys.includes(data.token_key)) {
+      await sql`DELETE FROM perspectives WHERE topic_id=${data.topic_id};`;
+      await sql`DELETE FROM objectives WHERE topic_id=${data.topic_id};`;
+      await sql`DELETE FROM topics WHERE topic_id=${data.topic_id};`;
+      cookies().set(`t_${data.topic_id}`, "", { maxAge: 0 });
+      cookies().delete(`t_${data.topic_id}`);
+    }
   } catch (e) {
     console.log(e, { message: "Failed to get perspectives" });
   }

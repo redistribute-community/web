@@ -8,7 +8,8 @@ export default async function Page({ params }) {
   const cookieStore = cookies();
   const token = cookieStore.get(`t_${slug}`);
   const locked = await isLocked(slug);
-  const perspectives = (await getPerspectives(slug, locked, token?.value)) || [];
+  const perspectives =
+    (await getPerspectives(slug, locked, token?.value)) || [];
 
   return (
     <main className="relative flex flex-col items-center justify-between h-dvh overflow-y-hidden">
