@@ -12,8 +12,8 @@ export default async function Page({ params }) {
     (await getPerspectives(slug, locked, token?.value)) || [];
 
   return (
-    <main className="relative flex flex-col items-center justify-between h-dvh overflow-y-hidden">
-      <div className="flex flex-col items-center w-4/5 h-dvh">
+    <main className="flex flex-col items-center min-h-screen h-full">
+      <div className="flex flex-col justify-between w-full h-full overflow-hidden relative">
         {!token ? (
           <div className="flex grow-0">
             <Token topicId={slug} perspectiveId={null} />
