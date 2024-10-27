@@ -12,21 +12,12 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
   const [file, setFile] = useState(null);
   const [perspectiveId, setPerspectiveId] = useState("");
   const [perspective, setPerspective] = useState("");
-  const [edit, setEdit] = useState(false);
   const [objectiveKey, setObjectiveKey] = useState("");
   const [fileDataURL, setFileDataURL] = useState(null);
   const [color, setColor] = useState("#000000");
   const formRef = useRef<HTMLFormElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const perspectivesEndRef = useRef<HTMLDivElement | null>(null);
   const perspectiveRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const scrollPerspectivesIntoView = () => {
-    perspectivesEndRef.current.scrollIntoView({
-      block: "end",
-      inline: "nearest",
-    });
-  };
 
   async function formAction(formData: FormData) {
     if (token) {
@@ -42,10 +33,8 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
         const formDataPerspective = formData.get("perspective");
         addOptimisticPerspectives(formDataPerspective);
         await addPerspective(topicId, formData);
-        setEdit(false);
         perspectiveRef.current["value"] = "";
         fileRef.current["value"] = "";
-        scrollPerspectivesIntoView();
       }
       setPerspective("");
     }
@@ -65,12 +54,6 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
     perspectives,
     (state, newPerspective) => [...state, { perspective: newPerspective }]
   );
-
-  useEffect(() => {
-    if (!edit) {
-      scrollPerspectivesIntoView();
-    }
-  }, [edit]);
 
   useEffect(() => {
     let fileReader: FileReader;
@@ -96,70 +79,62 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
 
   return (
     <>
-      <div className="flex-1 w-full overflow-y-auto">
-        <div className={"flex-1 w-full"}>
-          <div
-            ref={perspectivesEndRef}
-            className={"flex flex-col will-change-scroll"}
-          >
-            {optimisiticPerspectives.map(
-              (p: {
-                id: string;
-                perspective: string;
-                topic?: string;
-                description?: string;
-                color: string;
-                objective_key?: string;
-              }) => (
-                <button
-                  onClick={() => {
-                    setPerspectiveId(p.id);
-                    setPerspective(p.perspective);
-                    setObjectiveKey(p.objective_key);
-                    setEdit(true);
-                  }}
-                  onKeyDown={() => {
-                    setPerspectiveId(p.id);
-                    setPerspective(p.perspective);
-                    setObjectiveKey(p.objective_key);
-                    setEdit(true);
-                  }}
-                  key={p.id}
-                  data-id={p.id}
-                  className="rounded text-sm text-emerald-500 md:w-3/4 p-1 text-left"
-                  style={{ color: `${p.color}` }}
-                >
-                  {p.objective_key ? (
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_CDN_URL}/${p.objective_key}`}
-                      alt={p?.description}
-                      loading="lazy"
-                    />
-                  ) : (
-                    ""
-                  )}
-                  {perspectiveId === p.id ? (
-                    <Markdown
-                      remarkPlugins={[remarkGfm]}
-                      className="whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2"
-                    >
-                      {optimisiticPerspective}
-                    </Markdown>
-                  ) : (
-                    <Markdown
-                      remarkPlugins={[remarkGfm]}
-                      className="whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2"
-                    >
-                      {p.perspective}
-                    </Markdown>
-                  )}
-                </button>
-              )
-            )}
-          </div>
-        </div>
+      <div className="flex w-screen overflow-x-auto snap-x snap-mandatory grow">
+        {optimisiticPerspectives.map(
+          (p: {
+            id: string;
+            perspective: string;
+            objective_key: string;
+            color: string;
+            description: string;
+          }) => (
+            <div
+              key={p.id}
+              className="flex justify-center min-w-[80vw] snap-center p-4"
+            >
+              <button
+                onClick={() => {
+                  setPerspectiveId(p.id);
+                  setPerspective(p.perspective);
+                  setObjectiveKey(p.objective_key);
+                }}
+                onKeyDown={() => {
+                  setPerspectiveId(p.id);
+                  setPerspective(p.perspective);
+                  setObjectiveKey(p.objective_key);
+                }}
+                data-id={p.id}
+                className="rounded text-sm text-emerald-500 w-screen text-left"
+                style={{ color: `${p.color}` }}
+              >
+                {p.objective_key && (
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_CDN_URL}/${p.objective_key}`}
+                    alt={p?.description}
+                    loading="lazy"
+                  />
+                )}
+                {perspectiveId === p.id ? (
+                  <Markdown
+                    remarkPlugins={[remarkGfm]}
+                    className="whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2"
+                  >
+                    {optimisiticPerspective}
+                  </Markdown>
+                ) : (
+                  <Markdown
+                    remarkPlugins={[remarkGfm]}
+                    className="whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2"
+                  >
+                    {p.perspective}
+                  </Markdown>
+                )}
+              </button>
+            </div>
+          )
+        )}
       </div>
-      <div className="flex flex-col items-center w-4/5">
+      <div className="flex flex-col items-center w-4/5 mx-auto">
         <form
           action={formAction}
           ref={formRef}

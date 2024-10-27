@@ -6,8 +6,8 @@ export default async function Page({ params }) {
   const locked = await isLocked(slug);
 
   return (
-    <main className="relative flex flex-col items-center justify-between">
-      <div className="flex flex-col w-4/5 h-dvh">
+    <main className="flex flex-col items-center justify-between min-h-screen">
+      <div className="flex flex-col w-full">
         {!locked ? (
           <GetPerspectives topicId={slug} />
         ) : (

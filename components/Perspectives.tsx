@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm";
 export function Perspectives({ perspectives }) {
   return (
     <div className="flex-1 w-full">
-      <ul className="flex flex-col">
+      <ul className="flex">
         {perspectives.map(
           (perspective: {
             id: string;
