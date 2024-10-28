@@ -4,7 +4,7 @@ import remarkGfm from "remark-gfm";
 
 export function Perspectives({ perspectives }) {
   return (
-    <ul className="flex w-screen overflow-x-auto snap-x snap-mandatory grow">
+    <ul className="flex w-screen overflow-x-auto overflow-y-hidden snap-x snap-mandatory grow">
       {perspectives.map(
         (perspective: {
           id: string;

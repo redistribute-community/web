@@ -8,16 +8,32 @@ import { addPerspective, editPerspective } from "@/actions";
 import { Submit } from "@/components/Submit";
 
 export function WritePerspective({ topicId, perspectives, locked, token }) {
+  const MAX_LENGTH = 300;
+  const MAX_ROWS = 5;
   const btnText = !locked ? "🖋️" : "🔒";
+  const [focus, setFocus] = useState(false);
+  const [edit, setEdit] = useState(false);
   const [file, setFile] = useState(null);
   const [perspectiveId, setPerspectiveId] = useState("");
+  const [characters, setCharacters] = useState(0);
   const [perspective, setPerspective] = useState("");
   const [objectiveKey, setObjectiveKey] = useState("");
   const [fileDataURL, setFileDataURL] = useState(null);
   const [color, setColor] = useState("#000000");
   const formRef = useRef<HTMLFormElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const perspectivesEndRef = useRef<HTMLDivElement | null>(null);
   const perspectiveRef = useRef<HTMLTextAreaElement | null>(null);
+
+  const scrollPerspectivesIntoView = () => {
+    setTimeout(() => {
+      requestAnimationFrame(() => {
+        if (perspectivesEndRef.current) {
+          perspectivesEndRef.current.scrollLeft = 0;
+        }
+      });
+    }, 500);
+  };
 
   async function formAction(formData: FormData) {
     if (token) {
@@ -35,6 +51,8 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
         await addPerspective(topicId, formData);
         perspectiveRef.current["value"] = "";
         fileRef.current["value"] = "";
+        setEdit(false);
+        scrollPerspectivesIntoView();
       }
       setPerspective("");
     }
@@ -45,6 +63,8 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
   };
 
   const changeTextareaHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFocus(true);
+    setCharacters(e.target.value.length);
     setPerspective(e.target.value);
   };
 
@@ -54,6 +74,12 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
     perspectives,
     (state, newPerspective) => [...state, { perspective: newPerspective }]
   );
+
+  useEffect(() => {
+    if (!edit && optimisiticPerspective) {
+      scrollPerspectivesIntoView();
+    }
+  }, [edit, optimisiticPerspective]);
 
   useEffect(() => {
     let fileReader: FileReader;
@@ -79,7 +105,10 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
 
   return (
     <>
-      <div className="flex w-screen overflow-x-auto snap-x snap-mandatory grow">
+      <div
+        ref={perspectivesEndRef}
+        className="flex w-screen overflow-x-auto overflow-y-hidden snap-x snap-mandatory grow"
+      >
         {optimisiticPerspectives.map(
           (p: {
             id: string;
@@ -210,14 +239,28 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
                 id="perspective"
                 placeholder="🤔"
                 className="text-black rounded border border-gray-700 dark:bg-slate-800/20 focus:ring-purple-700 text-xs w-full"
+                maxLength={MAX_LENGTH}
+                rows={MAX_ROWS}
                 name="perspective"
                 onChange={(e) => changeTextareaHandler(e)}
+                onClick={() => {
+                  setCharacters(perspective.length);
+                  setFocus(true);
+                }}
+                onBlur={() => setFocus(false)}
                 ref={perspectiveRef}
                 value={perspective}
                 style={{ color: `${color}` }}
                 spellCheck="true"
                 required
               />
+              <div className="ml-2 w-4 h-4">
+                {focus && characters > MAX_LENGTH / 4 && (
+                  <span>
+                    {characters}/{MAX_LENGTH}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
           <Submit testid="submit" btnText={btnText} />
