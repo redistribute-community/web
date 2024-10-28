@@ -8,7 +8,13 @@ const nextConfig = {
   transpilePackages: ["next-mdx-remote"],
   output: "standalone",
   images: {
-    loader: "custom",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname:
+          "redistribute-community-pictures.nyc3.cdn.digitaloceanspaces.com",
+      },
+    ],
   },
 };
 
