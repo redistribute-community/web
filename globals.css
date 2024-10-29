@@ -2,15 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  overscroll-behavior-y: contain;
+  height: 100%;
+  margin: 0;
+}
+
 body {
   @apply bg-gradient-to-r from-purple-500 to-pink-500;
   @apply text-purple-700;
-  height: 100vh;
+  overflow-y: hidden;
+  height: 100%;
+  margin: 0;
 }
 
 a {
-  font-size: 1.25rem;
-  @apply text-orange-600;
+  font-size: 0.6rem;
+  text-decoration: underline;
 }
 
 hr {
