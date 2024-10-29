@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -6,7 +7,7 @@ export function Perspectives({ perspectives }) {
   return (
     <ul className="flex w-screen overflow-x-auto overflow-y-hidden snap-x snap-mandatory grow">
       {perspectives.map(
-        (perspective: {
+        (p: {
           id: string;
           perspective: string;
           topic?: string;
@@ -15,27 +16,33 @@ export function Perspectives({ perspectives }) {
           objective_key?: string;
         }) => (
           <li
-            key={perspective.id}
-            data-id={perspective.id}
+            key={p.id}
+            data-id={p.id}
             className="flex justify-center min-w-[80vw] snap-center p-4"
-            style={{ color: `${perspective.color}` }}
+            style={{ color: `${p.color}` }}
           >
-            {perspective.objective_key ? (
-              /* eslint-disable @next/next/no-img-element */
-              <img
-                src={`${process.env.NEXT_PUBLIC_CDN_URL}/${perspective.objective_key}`}
-                alt={perspective?.description}
-                loading="lazy"
-              />
-            ) : (
-              ""
-            )}
-            <Markdown
-              remarkPlugins={[remarkGfm]}
-              className="whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2"
-            >
-              {perspective.perspective}
-            </Markdown>
+            <div className="flex flex-col justify-center w-full">
+              {p.objective_key && (
+                <div className="relative w-3/4 h-1/2 mx-auto">
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_CDN_URL}/${p.objective_key}`}
+                    alt={p?.description || ""}
+                    priority={true}
+                    unoptimized
+                    fill
+                    style={{
+                      objectFit: "contain",
+                    }}
+                  />
+                </div>
+              )}
+              <Markdown
+                remarkPlugins={[remarkGfm]}
+                className={`flex flex-col justify-center ${p.objective_key ? "text-center" : ""} whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2`}
+              >
+                {p.perspective}
+              </Markdown>
+            </div>
           </li>
         )
       )}

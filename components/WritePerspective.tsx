@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 
+import Image from "next/image";
 import { useEffect, useOptimistic, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -121,49 +122,58 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
               key={p.id}
               className="flex justify-center min-w-[80vw] snap-center p-4"
             >
-              <button
-                onClick={() => {
-                  setPerspectiveId(p.id);
-                  setPerspective(p.perspective);
-                  setObjectiveKey(p.objective_key);
-                }}
-                onKeyDown={() => {
-                  setPerspectiveId(p.id);
-                  setPerspective(p.perspective);
-                  setObjectiveKey(p.objective_key);
-                }}
-                data-id={p.id}
-                className="rounded text-sm text-emerald-500 w-screen text-left"
-                style={{ color: `${p.color}` }}
-              >
+              <div className="flex flex-col justify-center w-full">
                 {p.objective_key && (
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_CDN_URL}/${p.objective_key}`}
-                    alt={p?.description}
-                    loading="lazy"
-                  />
+                  <div className="relative w-3/4 h-1/2 mx-auto">
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_CDN_URL}/${p.objective_key}`}
+                      alt={p?.description || ""}
+                      priority={true}
+                      unoptimized
+                      fill
+                      style={{
+                        objectFit: "contain",
+                      }}
+                    />
+                  </div>
                 )}
-                {perspectiveId === p.id ? (
-                  <Markdown
-                    remarkPlugins={[remarkGfm]}
-                    className="whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2"
-                  >
-                    {optimisiticPerspective}
-                  </Markdown>
-                ) : (
-                  <Markdown
-                    remarkPlugins={[remarkGfm]}
-                    className="whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2"
-                  >
-                    {p.perspective}
-                  </Markdown>
-                )}
-              </button>
+                <button
+                  onClick={() => {
+                    setPerspectiveId(p.id);
+                    setPerspective(p.perspective);
+                    setObjectiveKey(p.objective_key);
+                  }}
+                  onKeyDown={() => {
+                    setPerspectiveId(p.id);
+                    setPerspective(p.perspective);
+                    setObjectiveKey(p.objective_key);
+                  }}
+                  data-id={p.id}
+                  className={`flex flex-col ${p.objective_key ? "items-center" : ""} w-full text-left`}
+                  style={{ color: `${p.color}` }}
+                >
+                  {perspectiveId === p.id ? (
+                    <Markdown
+                      remarkPlugins={[remarkGfm]}
+                      className={`flex flex-col justify-center ${p.objective_key ? "text-center" : ""} whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2`}
+                    >
+                      {optimisiticPerspective}
+                    </Markdown>
+                  ) : (
+                    <Markdown
+                      remarkPlugins={[remarkGfm]}
+                      className={`flex flex-col justify-center ${p.objective_key ? "text-center" : ""} whitespace-pre-line has-[blockquote]:border-l-2 has-[blockquote]:border-purple-700 has-[blockquote]:pl-2`}
+                    >
+                      {p.perspective}
+                    </Markdown>
+                  )}
+                </button>
+              </div>
             </div>
           )
         )}
       </div>
-      <div className="flex flex-col items-center w-4/5 mx-auto">
+      <div className="flex flex-col items-center w-4/5 mx-auto mt-1">
         <form
           action={formAction}
           ref={formRef}
