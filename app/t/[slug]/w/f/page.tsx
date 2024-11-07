@@ -32,6 +32,7 @@ export default async function Page({ params }) {
             perspectives={perspectives}
             locked={hasLocked}
             token={token}
+            forward={forward}
           />
         )}
       </div>

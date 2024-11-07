@@ -8,12 +8,17 @@ import remarkGfm from "remark-gfm";
 import { addPerspective, editPerspective } from "@/actions";
 import { Submit } from "@/components/Submit";
 
-export function WritePerspective({ topicId, perspectives, locked, token }) {
+export function WritePerspective({
+  topicId,
+  perspectives,
+  locked,
+  token,
+  forward,
+}) {
   const MAX_LENGTH = 300;
   const MAX_ROWS = 5;
   const btnText = !locked ? "🖋️" : "🔒";
   const [focus, setFocus] = useState(false);
-  const [edit, setEdit] = useState(false);
   const [file, setFile] = useState(null);
   const [perspectiveId, setPerspectiveId] = useState("");
   const [characters, setCharacters] = useState(0);
@@ -24,13 +29,18 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
   const formRef = useRef<HTMLFormElement | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
   const perspectivesEndRef = useRef<HTMLDivElement | null>(null);
+  const perspectivesForwardEndRef = useRef<HTMLDivElement | null>(null);
   const perspectiveRef = useRef<HTMLTextAreaElement | null>(null);
 
   const scrollPerspectivesIntoView = () => {
     setTimeout(() => {
       requestAnimationFrame(() => {
-        if (perspectivesEndRef.current) {
-          perspectivesEndRef.current.scrollLeft = 0;
+        if (perspectivesEndRef.current || perspectivesForwardEndRef.current) {
+          !forward
+            ? (perspectivesEndRef.current.scrollLeft = 0)
+            : perspectivesForwardEndRef.current.scrollIntoView({
+                block: "end",
+              });
         }
       });
     }, 500);
@@ -52,7 +62,6 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
         await addPerspective(topicId, formData);
         perspectiveRef.current["value"] = "";
         fileRef.current["value"] = "";
-        setEdit(false);
         scrollPerspectivesIntoView();
       }
       setPerspective("");
@@ -75,12 +84,6 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
     perspectives,
     (state, newPerspective) => [...state, { perspective: newPerspective }]
   );
-
-  useEffect(() => {
-    if (!edit && optimisiticPerspective) {
-      scrollPerspectivesIntoView();
-    }
-  }, [edit, optimisiticPerspective]);
 
   useEffect(() => {
     let fileReader: FileReader;
@@ -111,15 +114,23 @@ export function WritePerspective({ topicId, perspectives, locked, token }) {
         className="flex w-screen overflow-x-auto overflow-y-hidden snap-x snap-mandatory grow"
       >
         {optimisiticPerspectives.map(
-          (p: {
-            id: string;
-            perspective: string;
-            objective_key: string;
-            color: string;
-            description: string;
-          }) => (
+          (
+            p: {
+              id: string;
+              perspective: string;
+              objective_key: string;
+              color: string;
+              description: string;
+            },
+            index: number
+          ) => (
             <div
               key={p.id}
+              ref={
+                index === optimisiticPerspectives.length - 1
+                  ? perspectivesForwardEndRef
+                  : null
+              }
               className="flex justify-center min-w-[80vw] snap-center p-4"
             >
               <div className="flex flex-col justify-center w-full">
