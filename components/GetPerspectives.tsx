@@ -9,7 +9,7 @@ export async function GetPerspectives({
   topicId: string;
   forward?: boolean;
 }) {
-  const perspectives = (await getPerspectives({topicId, forward})) || [];
+  const perspectives = (await getPerspectives({ topicId, forward })) || [];
   return (
     <>
       {perspectives.length > 0 ? (

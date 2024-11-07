@@ -8,8 +8,10 @@ export default async function Page({ params }) {
   const cookieStore = cookies();
   const token = cookieStore.get(`t_${slug}`)?.value;
   const hasLocked = await isLocked(slug);
+  const forward = false;
   const perspectives =
-    (await getPerspectives({topicId: slug, isLocked: hasLocked, token})) || [];
+    (await getPerspectives({ topicId: slug, isLocked: hasLocked, token })) ||
+    [];
 
   return (
     <main className="flex flex-col items-center h-full">
@@ -26,6 +28,7 @@ export default async function Page({ params }) {
             perspectives={perspectives}
             locked={hasLocked}
             token={token}
+            forward={forward}
           />
         )}
       </div>
