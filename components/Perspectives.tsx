@@ -18,6 +18,7 @@ export function Perspectives({ perspectives }) {
           <li
             key={p.id}
             data-id={p.id}
+            id={p.id}
             className="flex justify-center min-w-[80vw] snap-center p-4"
             style={{ color: `${p.color}` }}
           >

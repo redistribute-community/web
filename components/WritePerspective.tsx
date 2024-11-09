@@ -126,6 +126,7 @@ export function WritePerspective({
           ) => (
             <div
               key={p.id}
+              id={p.id}
               ref={
                 index === optimisiticPerspectives.length - 1
                   ? perspectivesForwardEndRef
